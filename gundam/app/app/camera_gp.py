@@ -18,13 +18,12 @@ from graphpipe import remote
 from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as vis_util
 
-PATH_TO_LABELS = os.path.join('data', 'tf_label_map.pbtxt')
+PATH_TO_LABELS = os.path.join('data', 'gface_tf_label_map.pbtxt')
 category_index = label_map_util.create_category_index_from_labelmap(PATH_TO_LABELS, use_display_name=True)
 
-#cap = cv2.VideoCapture(0)
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 height = 800
-width  = 1000
+width  = 800
 
 def main():
     while(True):

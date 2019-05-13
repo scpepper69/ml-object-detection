@@ -18,7 +18,7 @@ from graphpipe import remote
 from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as vis_util
 
-MODEL_FILE = "../../learning/frozen_model_for_gp_face_50000.pb"
+MODEL_FILE = "../../learning/frozen_inference_graph.pb"
 
 detection_graph = tf.Graph()
 with detection_graph.as_default():
@@ -29,12 +29,12 @@ with detection_graph.as_default():
 
 sess = tf.Session(graph=detection_graph)
 
-PATH_TO_LABELS = os.path.join('data', 'tf_label_map.pbtxt')
+PATH_TO_LABELS = os.path.join('data', 'gface_tf_label_map.pbtxt')
 category_index = label_map_util.create_category_index_from_labelmap(PATH_TO_LABELS, use_display_name=True)
 
 cap = cv2.VideoCapture(0)
-height = 400
-width  = 400
+height = 800
+width  = 800
 
 def main():
     while(True):
@@ -44,7 +44,6 @@ def main():
         image_np_expanded = np.expand_dims(image_np, axis=0)
 
         starttime = time.time()
-
 
         image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')
         # Each box represents a part of the image where a particular object was detected.
