@@ -18,7 +18,7 @@ from graphpipe import remote
 from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as vis_util
 
-MODEL_FILE = "../../learning/frozen_model_for_gp.pb"
+MODEL_FILE = "../../learning/frozen_model_for_gp_face_50000.pb"
 
 detection_graph = tf.Graph()
 with detection_graph.as_default():
@@ -27,7 +27,9 @@ with detection_graph.as_default():
         graph_def.ParseFromString(f.read())
         tf.import_graph_def(graph_def, name="")
 
-PATH_TO_LABELS = os.path.join('data', 'mscoco_label_map.pbtxt')
+sess = tf.Session(graph=detection_graph)
+
+PATH_TO_LABELS = os.path.join('data', 'tf_label_map.pbtxt')
 category_index = label_map_util.create_category_index_from_labelmap(PATH_TO_LABELS, use_display_name=True)
 
 cap = cv2.VideoCapture(0)
@@ -43,29 +45,28 @@ def main():
 
         starttime = time.time()
 
-        with detection_graph.as_default():
-            with tf.Session(graph=detection_graph) as sess:
-                image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')
-                # Each box represents a part of the image where a particular object was detected.
-                boxes = detection_graph.get_tensor_by_name('detection_boxes:0')
-                # Each score represent how level of confidence for each of the objects.
-                # Score is shown on the result image, together with the class label.
-                scores = detection_graph.get_tensor_by_name('detection_scores:0')
-                classes = detection_graph.get_tensor_by_name('detection_classes:0')
-                num_detections = detection_graph.get_tensor_by_name('num_detections:0')
-                # Actual detection.
-                (boxes, scores, classes, num_detections) = sess.run(
-                    [boxes, scores, classes, num_detections],
-                    feed_dict={image_tensor: image_np_expanded})
-                # Visualization of the results of a detection.
-                vis_util.visualize_boxes_and_labels_on_image_array(
-                    image_np,
-                    np.squeeze(boxes),
-                    np.squeeze(classes).astype(np.int32),
-                    np.squeeze(scores),
-                    category_index,
-                    use_normalized_coordinates=True,
-                    line_thickness=8)
+
+        image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')
+        # Each box represents a part of the image where a particular object was detected.
+        boxes = detection_graph.get_tensor_by_name('detection_boxes:0')
+        # Each score represent how level of confidence for each of the objects.
+        # Score is shown on the result image, together with the class label.
+        scores = detection_graph.get_tensor_by_name('detection_scores:0')
+        classes = detection_graph.get_tensor_by_name('detection_classes:0')
+        num_detections = detection_graph.get_tensor_by_name('num_detections:0')
+        # Actual detection.
+        (boxes, scores, classes, num_detections) = sess.run(
+            [boxes, scores, classes, num_detections],
+            feed_dict={image_tensor: image_np_expanded})
+        # Visualization of the results of a detection.
+        vis_util.visualize_boxes_and_labels_on_image_array(
+            image_np,
+            np.squeeze(boxes),
+            np.squeeze(classes).astype(np.int32),
+            np.squeeze(scores),
+            category_index,
+            use_normalized_coordinates=True,
+            line_thickness=8)
 
         endtime = time.time()
         interval = endtime - starttime

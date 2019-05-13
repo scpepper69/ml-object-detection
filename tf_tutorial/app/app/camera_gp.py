@@ -1,29 +1,18 @@
 import numpy as np
 import os
-import six.moves.urllib as urllib
-import sys
-import tarfile
-import tensorflow as tf
-import zipfile
 import cv2
 import time
-
-from collections import defaultdict
-from io import StringIO
-from matplotlib import pyplot as plt
-from PIL import Image
-
-from graphpipe import remote
 
 from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as vis_util
 
-PATH_TO_LABELS = os.path.join('data', 'mscoco_label_map.pbtxt')
-category_index = label_map_util.create_category_index_from_labelmap(PATH_TO_LABELS, use_display_name=True)
+from graphpipe import remote
+
+label_file='mscoco_label_map.pbtxt'
+category_index = label_map_util.create_category_index_from_labelmap(os.path.join('data', label_file), use_display_name=True)
 
 cap = cv2.VideoCapture(0)
-height = 400
-width  = 400
+height,width = 800,800
 
 def main():
     while(True):
@@ -34,14 +23,27 @@ def main():
 
         starttime = time.time()
 
-        pred = remote.execute_multi("http://127.0.0.1:9005", [image_np_expanded], ['image_tensor'], ['detection_boxes', 'detection_scores', 'num_detections', 'detection_classes'])
+#        pred = remote.execute_multi("http://127.0.0.1:9005", [image_np_expanded], ['image_tensor'], ['detection_boxes', 'detection_scores', 'num_detections', 'detection_classes'])
+        boxes,scores,num_detections,classes = remote.execute_multi(
+            'http://127.0.0.1:9005',
+            [image_np_expanded], 
+            ['image_tensor'], 
+            ['detection_boxes', 'detection_scores', 'num_detections', 'detection_classes'])
 
         # Visualization of the results of a detection.
+#        vis_util.visualize_boxes_and_labels_on_image_array(
+#            image_np,
+#            pred[0][0],
+#            pred[3][0].astype(np.uint8),
+#            pred[1][0],
+#            category_index,
+#            use_normalized_coordinates=True,
+#            line_thickness=8)
         vis_util.visualize_boxes_and_labels_on_image_array(
             image_np,
-            pred[-4][0],
-            pred[-1][0].astype(np.uint8),
-            pred[-3][0],
+            boxes[0],
+            classes[0].astype(np.uint8),
+            scores[0],
             category_index,
             use_normalized_coordinates=True,
             line_thickness=8)

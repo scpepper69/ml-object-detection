@@ -40,4 +40,4 @@ vis_util.visualize_boxes_and_labels_on_image_array(
   use_normalized_coordinates=True,
   line_thickness=8)
 
-cv2.imwrite("/tmp/test.jpg", image_np)
+cv2.imwrite("./test.jpg", image_np)

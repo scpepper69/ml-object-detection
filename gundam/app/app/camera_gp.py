@@ -21,9 +21,10 @@ from object_detection.utils import visualization_utils as vis_util
 PATH_TO_LABELS = os.path.join('data', 'tf_label_map.pbtxt')
 category_index = label_map_util.create_category_index_from_labelmap(PATH_TO_LABELS, use_display_name=True)
 
-cap = cv2.VideoCapture(0)
+#cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 height = 800
-width  = 800
+width  = 1000
 
 def main():
     while(True):
@@ -49,8 +50,10 @@ def main():
         endtime = time.time()
         interval = endtime - starttime
         print(str(interval) + "sec")
+        print(endtime)
 
         cv2.imshow("camera window", image_np) 
+#        cv2.imwrite("zaku_figure"+str(endtime)+".jpg",image_np)
 
         if cv2.waitKey(1) == 27:
             break
