@@ -8,6 +8,6 @@ with tf.Session() as sess:
         graph_def.ParseFromString(f.read())
         g_in = tf.import_graph_def(graph_def)
  
-    LOGDIR='LOGDIR'
+    LOGDIR='log'
     train_writer = tf.summary.FileWriter(LOGDIR)
     train_writer.add_graph(sess.graph)
