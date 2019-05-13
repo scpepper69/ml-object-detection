@@ -1,1 +1,0 @@
-docker run -d -it --name tf_tutorial --rm -p 9005:9005 sleepsonthefloor/graphpipe-tf:cpu --model=https://github.com/scpepper69/ml-object-detection/raw/master/tf_tutorial/learning/frozen_inference_graph.pb --listen=0.0.0.0:9005
