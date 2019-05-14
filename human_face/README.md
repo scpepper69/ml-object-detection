@@ -1,13 +1,8 @@
-# Gundam Face Detection Application
+# Face Counter Application
 
 This application is created as client application.
 
-Gundam Face detection is performed on the image displayed by the web camera connected to the PC.
-
-Now, the model can detect following mobile suites.
-
-- RX-78-2
-- MS-06
+Face detection is performed on the image displayed by the web camera connected to the PC.
 
 
 
@@ -26,18 +21,14 @@ your pc should have one camera device at least.
 
 Please see README.md at parent directory.
 
-Additional:
 
-- TensorFlow Object Detection API
-
-  Please see this [page](https://github.com/tensorflow/models/tree/master/research/object_detection) :
 
 
 ### Usage
 1. docker run (windows powershell)
 
    ```bash
-   # cd ml-object-detection/gface/app/
+   # cd ml-object-detection/human_face/app/
    # ./docker.ps1
    ```
 
@@ -51,13 +42,14 @@ Additional:
    
 
    Optional: For not using GraphPipe
-   
+
    ```bash
-   # cd ml-object-detection/gface/app/app
-# python ./camera_pb.py
+   # cd ml-object-detection/human_face/app/app
+   # python ./camera_pb.py
    ```
-   
-   
+
+
+
 ## Application Architecture
 
 - Learned Model : TensorFlow
@@ -68,5 +60,7 @@ Additional:
 
 ## Model Structure
 
-The model is based on ssd_mobilenet_v1_coco and fine tuned for some mobile suites faces.
+Model file is not included.
+
+You can use some face detection models like [this](https://github.com/the-house-of-black-and-white/hall-of-faces).
 

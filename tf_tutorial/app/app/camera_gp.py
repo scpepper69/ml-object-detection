@@ -23,9 +23,9 @@ def main():
 
         starttime = time.time()
 
-#        pred = remote.execute_multi("http://127.0.0.1:9005", [image_np_expanded], ['image_tensor'], ['detection_boxes', 'detection_scores', 'num_detections', 'detection_classes'])
+#        pred = remote.execute_multi("http://127.0.0.1:9021", [image_np_expanded], ['image_tensor'], ['detection_boxes', 'detection_scores', 'num_detections', 'detection_classes'])
         boxes,scores,num_detections,classes = remote.execute_multi(
-            'http://127.0.0.1:9005',
+            'http://127.0.0.1:9021',
             [image_np_expanded], 
             ['image_tensor'], 
             ['detection_boxes', 'detection_scores', 'num_detections', 'detection_classes'])

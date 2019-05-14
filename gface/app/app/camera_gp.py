@@ -34,7 +34,7 @@ def main():
 
         starttime = time.time()
 
-        pred = remote.execute_multi("http://127.0.0.1:9006", [image_np_expanded], ['image_tensor'], ['detection_boxes', 'detection_scores', 'num_detections', 'detection_classes', 'raw_detection_boxes', 'raw_detection_scores'])
+        pred = remote.execute_multi("http://127.0.0.1:9023", [image_np_expanded], ['image_tensor'], ['detection_boxes', 'detection_scores', 'num_detections', 'detection_classes', 'raw_detection_boxes', 'raw_detection_scores'])
 
         # Visualization of the results of a detection.
         vis_util.visualize_boxes_and_labels_on_image_array(
