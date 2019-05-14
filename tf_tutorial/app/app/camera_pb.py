@@ -33,8 +33,7 @@ PATH_TO_LABELS = os.path.join('data', 'mscoco_label_map.pbtxt')
 category_index = label_map_util.create_category_index_from_labelmap(PATH_TO_LABELS, use_display_name=True)
 
 cap = cv2.VideoCapture(0)
-height = 400
-width  = 400
+height,width = 800,800
 
 def main():
     while(True):
