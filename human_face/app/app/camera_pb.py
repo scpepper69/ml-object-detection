@@ -3,7 +3,7 @@ import os
 import cv2
 import tensorflow as tf
 
-model_file = "../../learning/frozen_inference_graph.pb"
+model_file = "../../learning/human_face_detection.pb"
 
 # Input Definition
 detection_graph = tf.Graph()

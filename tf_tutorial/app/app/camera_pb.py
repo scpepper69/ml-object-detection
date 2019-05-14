@@ -18,7 +18,7 @@ from graphpipe import remote
 from object_detection.utils import label_map_util
 from object_detection.utils import visualization_utils as vis_util
 
-MODEL_FILE = "../../learning/frozen_inference_graph.pb"
+MODEL_FILE = "../../learning/tf_tutorial_detection.pb"
 
 detection_graph = tf.Graph()
 with detection_graph.as_default():

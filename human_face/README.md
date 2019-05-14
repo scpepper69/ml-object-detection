@@ -28,15 +28,15 @@ Please see README.md at parent directory.
 1. docker run (windows powershell)
 
    ```bash
-   # cd ml-object-detection/human_face/app/
-   # ./docker.ps1
+   cd ml-object-detection/human_face/app/
+   ./docker.ps1
    ```
 
-1. Startup hiragana.py
+1. Startup application
 
    ```bash
-   # cd ./app
-   # python ./camera_gp.py
+   cd ./app
+   python ./camera_gp.py
    ```
 
    
@@ -44,8 +44,8 @@ Please see README.md at parent directory.
    Optional: For not using GraphPipe
 
    ```bash
-   # cd ml-object-detection/human_face/app/app
-   # python ./camera_pb.py
+   cd ml-object-detection/human_face/app/app
+   python ./camera_pb.py
    ```
 
 

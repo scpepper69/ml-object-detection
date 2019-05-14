@@ -37,15 +37,15 @@ Additional:
 1. docker run (windows powershell)
 
    ```bash
-   # cd ml-object-detection/gface/app/
-   # ./docker.ps1
+   cd ml-object-detection/gface/app/
+   ./docker.ps1
    ```
 
-1. Startup hiragana.py
+1. Startup application
 
    ```bash
-   # cd ./app
-   # python ./camera_gp.py
+   cd ./app
+   python ./camera_gp.py
    ```
 
    
@@ -53,8 +53,8 @@ Additional:
    Optional: For not using GraphPipe
    
    ```bash
-   # cd ml-object-detection/gface/app/app
-# python ./camera_pb.py
+   cd ml-object-detection/gface/app/app
+   python ./camera_pb.py
    ```
    
    
@@ -69,4 +69,5 @@ Additional:
 ## Model Structure
 
 The model is based on ssd_mobilenet_v1_coco and fine tuned for some mobile suites faces.
+
 
