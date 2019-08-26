@@ -1,23 +1,14 @@
 import numpy as np
 import os
-import six.moves.urllib as urllib
 import sys
-import tarfile
-import tensorflow as tf
-import zipfile
 import cv2
 import time
-
-from collections import defaultdict
-from io import StringIO
-from matplotlib import pyplot as plt
 from PIL import Image
-
 from graphpipe import remote
 
 color=(255, 255, 0)
 cap = cv2.VideoCapture(0)
-height,width = 800,800
+height,width = 600,800
 
 class_array = ['None','Gundam','Zaku']
 def ret_class(n):
@@ -38,7 +29,7 @@ def main():
         image_np = cv2.resize(frame,(width,height))
         image_np_expanded = np.expand_dims(image_np, axis=0)
 
-#        starttime = time.time()
+        starttime = time.time()
 
         # Actual detection.
         boxes,scores,num_detections,classes = remote.execute_multi(
@@ -46,6 +37,10 @@ def main():
             [image_np_expanded],
             ['image_tensor'],
             ['detection_boxes', 'detection_scores', 'num_detections', 'detection_classes'])
+
+        endtime = time.time()
+        interval = endtime - starttime
+        print(str(interval) + " sec")
 
         # Visualize Objects
         num_persons=0
@@ -61,15 +56,9 @@ def main():
                 x, y, w, h = int(left), int(top), int(right - left), int(bottom - top)
                 draw_box(image_np, (x, y, w, h), color, scores[0][i], classes[0][i])
 
-        cv2.imshow("camera window", image_np)
-
-#        endtime = time.time()
-#        interval = endtime - starttime
-#        print(str(interval) + "sec")
-#        print(endtime)
 
         cv2.imshow("camera window", image_np) 
-#        cv2.imwrite("zaku_figure"+str(endtime)+".jpg",image_np)
+#        cv2.imwrite("gface_detection"+str(endtime)+".jpg",image_np)
 
         if cv2.waitKey(1) == 27:
             break

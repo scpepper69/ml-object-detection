@@ -1,22 +1,11 @@
 import numpy as np
 import os
-import six.moves.urllib as urllib
+#os.environ['CUDA_VISIBLE_DEVICES'] = '-1' #disable gpu
 import sys
-import tarfile
 import tensorflow as tf
-import zipfile
 import cv2
 import time
-
-from collections import defaultdict
-from io import StringIO
-from matplotlib import pyplot as plt
 from PIL import Image
-
-from graphpipe import remote
-
-from object_detection.utils import label_map_util
-from object_detection.utils import visualization_utils as vis_util
 
 MODEL_FILE = "../../learning/gface_detection.pb"
 
@@ -29,12 +18,21 @@ with detection_graph.as_default():
 
 sess = tf.Session(graph=detection_graph)
 
-PATH_TO_LABELS = os.path.join('data', 'gface_tf_label_map.pbtxt')
-category_index = label_map_util.create_category_index_from_labelmap(PATH_TO_LABELS, use_display_name=True)
-
+color=(255, 255, 0)
 cap = cv2.VideoCapture(0)
-height = 800
-width  = 800
+height,width = 600,800
+
+class_array = ['None','Gundam','Zaku']
+def ret_class(n):
+    return class_array[n]
+
+def draw_box(img, box, color, score, target_class):
+    x, y, w, h = box
+    label = str(ret_class(int(target_class)))+' face '+str(int(score*100))+'%'  #self.name
+    cv2.rectangle(img, (x, y), (x + w, y + h), color, 2)
+    label_size, base_line = cv2.getTextSize(label, cv2.FONT_HERSHEY_PLAIN, 1.5, 1)
+    cv2.rectangle(img, (x, y), (x + label_size[0], y + label_size[1] + base_line), color, cv2.FILLED)
+    cv2.putText(img, label, (x, y + label_size[1]), cv2.FONT_HERSHEY_PLAIN, 1.5, (0, 0, 0))
 
 def main():
     while(True):
@@ -45,31 +43,35 @@ def main():
 
         starttime = time.time()
 
+        # Input Definition
         image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')
-        # Each box represents a part of the image where a particular object was detected.
         boxes = detection_graph.get_tensor_by_name('detection_boxes:0')
-        # Each score represent how level of confidence for each of the objects.
-        # Score is shown on the result image, together with the class label.
         scores = detection_graph.get_tensor_by_name('detection_scores:0')
         classes = detection_graph.get_tensor_by_name('detection_classes:0')
         num_detections = detection_graph.get_tensor_by_name('num_detections:0')
+
         # Actual detection.
         (boxes, scores, classes, num_detections) = sess.run(
             [boxes, scores, classes, num_detections],
             feed_dict={image_tensor: image_np_expanded})
-        # Visualization of the results of a detection.
-        vis_util.visualize_boxes_and_labels_on_image_array(
-            image_np,
-            np.squeeze(boxes),
-            np.squeeze(classes).astype(np.int32),
-            np.squeeze(scores),
-            category_index,
-            use_normalized_coordinates=True,
-            line_thickness=8)
+
+        # Visualize Objects
+        num_persons=0
+        for i in range(boxes[0].shape[0]):
+            if scores[0][i] >= 0.5:
+                num_persons+=1
+
+                im_height, im_width, _ = image_np.shape
+                ymin, xmin, ymax, xmax = tuple(boxes[0][i].tolist())
+                (left, right, top, bottom) = (xmin * im_width, xmax * im_width,
+                                              ymin * im_height, ymax * im_height)
+
+                x, y, w, h = int(left), int(top), int(right - left), int(bottom - top)
+                draw_box(image_np, (x, y, w, h), color, scores[0][i], classes[0][i])
 
         endtime = time.time()
         interval = endtime - starttime
-        print(str(interval) + "sec")
+        print(str(interval) + " sec")
 
         cv2.imshow("camera window", image_np) 
 
