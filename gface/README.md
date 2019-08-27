@@ -14,7 +14,7 @@ Now, the model can detect following mobile suites.
 
 ## Application Architecture
 
-your pc should have one camera device at least.
+Your pc should have one camera device at least.
 
 <img class="aligncenter size-full" src="https://drive.google.com/uc?export=view&id=1h_0QSzAzVmrVb2KstaQmPc3ounfJYqUo">
 
@@ -34,12 +34,27 @@ Additional:
 
 
 ### Usage
-1. docker run (windows powershell)
+1. docker run
 
    ```bash
+   # GraphPipe on Windows
    cd ml-object-detection/gface/app/
    ./docker.ps1
    ```
+
+   ```bash
+   # GraphPipe on Linux
+   cd ml-object-detection/gface/app/
+   ./docker.sh
+   ```
+
+   ```bash
+   # TensorFlow Serving on Linux
+   cd ml-object-detection/gface/app/
+   ./docker_tfs.sh
+   ```
+
+   
 
 1. Startup application
 
@@ -58,10 +73,19 @@ Additional:
    ```
    
    
+   
+   Optional: For using TensorFlow Serving
+   
+   ```bash
+   cd ml-object-detection/gface/app/app
+   python ./camera_tfs.py
+   ```
+   
+   
 ## Application Architecture
 
 - Learned Model : TensorFlow
-- Model Server : GraphPipe
+- Model Server : GraphPipe or TensorFlow Serving
 - Client Application : Python
 
 

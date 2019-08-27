@@ -19,13 +19,17 @@ Python and libraries version are followings.
 
  - Python 3.6.6
 
- - TensorFlow 1.11.0 (or later)
+ - TensorFlow 1.11.0 or later
 
-   The GraphPipe docker images published on public repository are built by TensorFlow 1.8 or 1.11.
+   The GraphPipe docker images published on public repository are built by TensorFlow 1.8 or 1.11.0.
 
-   If you train some models or create some frozen models for using GraphPipe,  you should use TensorFlow 1.11.0 .
+   If you train some models or create some frozen models for using GraphPipe,  you should use TensorFlow 1.11.0 or later.
 
  - GraphPipe 1.0.4 (if you need)
+
+ - TensorFlow Serving 1.11.0 or later (if you need)
+
+## 
 
 
 
