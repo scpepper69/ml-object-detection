@@ -69,7 +69,9 @@ Additional:
    
    ```bash
    cd ml-object-detection/gface/app/app
-   python ./camera_pb.py
+   python ./camera_pb_gpu.py
+   # if you have gpu and do not want to use gpu
+   python ./camera_pb_cpu.py
    ```
    
    

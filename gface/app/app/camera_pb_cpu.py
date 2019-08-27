@@ -1,34 +1,26 @@
 import numpy as np
 import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1' #disable gpu
 import sys
 import tensorflow as tf
 import cv2
 import time
 from PIL import Image
 
-from grpc.beta import implementations
-from tensorflow_serving.apis import prediction_service_pb2,predict_pb2
+MODEL_FILE = "../../learning/gface_detection.pb"
+
+detection_graph = tf.Graph()
+with detection_graph.as_default():
+    with open(MODEL_FILE, 'rb') as f:
+        graph_def = tf.GraphDef()
+        graph_def.ParseFromString(f.read())
+        tf.import_graph_def(graph_def, name="")
+
+sess = tf.Session(graph=detection_graph)
 
 color=(255, 255, 0)
 cap = cv2.VideoCapture(0)
 height,width = 600,800
-
-#TF Serving host
-SERVING_HOST='172.25.172.110'
-SERVING_PORT=8500
-
-# create grpc stub
-channel = implementations.insecure_channel(SERVING_HOST, SERVING_PORT)
-stub = prediction_service_pb2.beta_create_PredictionService_stub(channel)
-
-# Create prediction request object
-request = predict_pb2.PredictRequest()
-
-# Specify model name (must be the same as when the TensorFlow serving serving was started)
-request.model_spec.name = 'gface_tfs'
-
-# Initalize prediction 
-request.model_spec.signature_name = "serving_default"
 
 class_array = ['None','Gundam','Zaku']
 def ret_class(n):
@@ -52,37 +44,30 @@ def main():
         starttime = time.time()
 
         # Input Definition
-        request.inputs['inputs'].CopyFrom(tf.contrib.util.make_tensor_proto(image_np_expanded))
+        image_tensor = detection_graph.get_tensor_by_name('image_tensor:0')
+        boxes = detection_graph.get_tensor_by_name('detection_boxes:0')
+        scores = detection_graph.get_tensor_by_name('detection_scores:0')
+        classes = detection_graph.get_tensor_by_name('detection_classes:0')
+        num_detections = detection_graph.get_tensor_by_name('num_detections:0')
 
         # Actual detection.
-        result = stub.Predict(request, 10.0)  # 10 secs timeout
-
-        boxes = result.outputs['detection_boxes'].float_val
-        classes = result.outputs['detection_classes'].float_val
-        scores = result.outputs['detection_scores'].float_val
-
-#        image_vis = vis_util.visualize_boxes_and_labels_on_image_array(
-#            image_np,
-#            np.reshape(boxes,[100,4]),
-#            np.squeeze(classes).astype(np.int32),
-#            np.squeeze(scores),
-#            category_index,
-#            use_normalized_coordinates=True,
-#            line_thickness=8)
+        (boxes, scores, classes, num_detections) = sess.run(
+            [boxes, scores, classes, num_detections],
+            feed_dict={image_tensor: image_np_expanded})
 
         # Visualize Objects
         num_persons=0
-        for i in range(np.reshape(boxes,[100,4]).shape[0]):
-            if np.squeeze(scores)[i] >= 0.5:
+        for i in range(boxes[0].shape[0]):
+            if scores[0][i] >= 0.5:
                 num_persons+=1
 
                 im_height, im_width, _ = image_np.shape
-                ymin, xmin, ymax, xmax = tuple(np.reshape(boxes,[100,4])[i].tolist())
+                ymin, xmin, ymax, xmax = tuple(boxes[0][i].tolist())
                 (left, right, top, bottom) = (xmin * im_width, xmax * im_width,
                                               ymin * im_height, ymax * im_height)
 
                 x, y, w, h = int(left), int(top), int(right - left), int(bottom - top)
-                draw_box(image_np, (x, y, w, h), color, np.squeeze(scores)[i], np.squeeze(classes).astype(np.int32)[i])
+                draw_box(image_np, (x, y, w, h), color, scores[0][i], classes[0][i])
 
         endtime = time.time()
         interval = endtime - starttime
