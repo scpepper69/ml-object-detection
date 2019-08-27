@@ -15,7 +15,7 @@ cap = cv2.VideoCapture(0)
 height,width = 600,800
 
 #TF Serving host
-SERVING_HOST='172.30.233.208'
+SERVING_HOST='172.25.172.110'
 SERVING_PORT=8500
 
 # create grpc stub

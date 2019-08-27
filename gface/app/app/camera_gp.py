@@ -33,7 +33,7 @@ def main():
 
         # Actual detection.
         boxes,scores,num_detections,classes = remote.execute_multi(
-            'http://172.30.233.208:9023',
+            'http://172.25.172.110:9023',
             [image_np_expanded],
             ['image_tensor'],
             ['detection_boxes', 'detection_scores', 'num_detections', 'detection_classes'])
