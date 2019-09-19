@@ -16,7 +16,7 @@ sess = tf.Session(graph=detection_graph)
 
 color=(255, 255, 0)
 cap = cv2.VideoCapture(0)
-height,width = 800,800
+height,width = 600,800
 
 def draw_box(img, box, color, score):
     x, y, w, h = box
